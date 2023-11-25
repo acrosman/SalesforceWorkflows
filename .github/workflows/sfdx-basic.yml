@@ -1,0 +1,37 @@
+name: test run scratch
+
+# Definition when the workflow should run
+on:
+  # The workflow will run whenever an event happens on a pull request
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  validate_scratch_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Install Salesforce CLI
+      - name: "Install Salesforce CLI"
+        run: |
+          npm install @salesforce/cli --location=global
+          nodeInstallPath=$(npm config get prefix)
+          echo "$nodeInstallPath/bin" >> $GITHUB_PATH
+          sf --version
+      # Checkout the code in the pull request
+      - name: "Checkout source code"
+        uses: actions/checkout@v3
+      # Load secret for dev hub
+      - name: "Populate auth file with SFDX_URL secret"
+        shell: bash
+        run: "echo ${{ secrets.DEVHUB_SFDX_URL}} > ./SFDX_URL_STORE.txt"
+      - name: "Authenticate with dev hub"
+        run: sf org login sfdx-url -f ./SFDX_URL_STORE.txt -a devhub -d
+      # Create a scratch org
+      - name: "Create scratch org"
+        run: "sf org create scratch -d -f config/project-scratch.json -a our-scratch-org --duration-days 1"
+      # Deploy Project Manifest
+      - name: "Deploy Metadata"
+        run: "sf project deploy start --manifest manifest.xml --target-org our-scratch-org"
+      # Clean up the org again
+      - name: "Delete edu scratch org"
+        run: "sf org delete scratch --target-org edu-org --no-prompt"
