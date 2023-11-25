@@ -28,10 +28,10 @@ jobs:
         run: sf org login sfdx-url -f ./SFDX_URL_STORE.txt -a devhub -d
       # Create a scratch org
       - name: "Create scratch org"
-        run: "sf org create scratch -d -f config/project-scratch.json -a our-scratch-org --duration-days 1"
+        run: "sf org create scratch -d -f config/project-scratch-def.json -a our-scratch-org --duration-days 1"
       # Deploy Project Manifest
       - name: "Deploy Metadata"
         run: "sf project deploy start --manifest manifest.xml --target-org our-scratch-org"
       # Clean up the org again
       - name: "Delete edu scratch org"
-        run: "sf org delete scratch --target-org edu-org --no-prompt"
+        run: "sf org delete scratch --target-org our-scratch-org --no-prompt"
