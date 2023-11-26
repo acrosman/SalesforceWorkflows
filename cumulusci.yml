@@ -1,0 +1,25 @@
+minimum_cumulusci_version: '3.81.0'
+project:
+    name: SalesforceWorkflows
+    package:
+        name: SalesforceWorkflows
+        api_version: '59.0'
+    git:
+        default_branch: 'main'
+    source_format: sfdx
+
+tasks:
+    robot:
+        options:
+            suites: robot/SalesforceWorkflows/tests
+            options:
+                outputdir: robot/SalesforceWorkflows/results
+
+    robot_testdoc:
+        options:
+            path: robot/SalesforceWorkflows/tests
+            output: robot/SalesforceWorkflows/doc/SalesforceWorkflows_tests.html
+
+    run_tests:
+        options:
+            required_org_code_coverage_percent: 75
