@@ -31,7 +31,7 @@ jobs:
         run: "sf org create scratch -d -f config/project-scratch-def.json -a our-scratch-org --duration-days 1"
       # Deploy Project Manifest
       - name: "Deploy Metadata"
-        run: "sf project deploy start --manifest manifest.xml --target-org our-scratch-org"
+        run: "sf project deploy start --manifest manifests/sample.xml --target-org our-scratch-org"
       # Clean up the org again
-      - name: "Delete edu scratch org"
+      - name: "Delete scratch org"
         run: "sf org delete scratch --target-org our-scratch-org --no-prompt"

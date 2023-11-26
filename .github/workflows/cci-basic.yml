@@ -1,0 +1,29 @@
+name: Feature Test
+on:
+  pull_request:
+    types: [opened, synchronize]
+jobs:
+  test:
+    name: "CCI Test"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: "Install Salesforce CLI"
+        run: |
+          npm install @salesforce/cli --location=global
+          nodeInstallPath=$(npm config get prefix)
+          echo "$nodeInstallPath/bin" >> $GITHUB_PATH
+          sf --version
+      - name: "Populate auth file with SFDX_URL secret"
+        shell: bash
+        run: "echo ${{ secrets.DEVHUB_SFDX_URL}} > ./SFDX_URL_STORE.txt"
+      - name: "Authenticate with dev hub"
+        run: sf org login sfdx-url -f ./SFDX_URL_STORE.txt -a devhub -d
+      - name: Install CumulusCI
+        run: pipx install cumulusci
+      - name: Build Org and Execute Tests
+        run: cci flow run ci_beta --org beta
+      - name: Delete Scratch Org
+        if: ${{ always() }}
+        run: |
+          cci org scratch_delete beta
