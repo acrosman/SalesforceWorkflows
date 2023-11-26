@@ -33,5 +33,5 @@ jobs:
       - name: "Deploy Metadata"
         run: "sf project deploy start --manifest manifest.xml --target-org our-scratch-org"
       # Clean up the org again
-      - name: "Delete edu scratch org"
+      - name: "Delete scratch org"
         run: "sf org delete scratch --target-org our-scratch-org --no-prompt"
