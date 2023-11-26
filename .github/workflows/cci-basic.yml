@@ -5,7 +5,7 @@ on:
 jobs:
   test:
     name: "CCI Test"
-    runs-on: sfdc-ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: "Install Salesforce CLI"
